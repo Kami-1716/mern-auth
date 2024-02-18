@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
-import { signinUser, signoutUser } from '../redux/user/userSlice.js'
+import { signinUser } from '../redux/user/userSlice.js'
+import OAuth from '../components/OAuth.jsx'
 
 const SignIn = () => {
   const [userData, setUserData] = useState(null)
@@ -74,10 +75,12 @@ const SignIn = () => {
         >
           {isSubmitting ? 'Signing In...' : 'Sign In'}
         </button>
+        <OAuth />
         {errors.root && <p className='text-red-500'>{errors.root.message}</p>}
         <p className='text-right'>Don&#39;t Have an account? <span className='text-blue-500'>
           <Link to='/sign-up'>Sign Up</Link>
         </span></p>
+
       </form>
     </div>
   )

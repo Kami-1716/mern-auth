@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
+import { OAuth } from '../components'
 
 const SignUp = () => {
   const [userData, setUserData] = useState({})
@@ -93,6 +94,7 @@ const SignUp = () => {
         >
           {isSubmitting ? 'Submitting...' : 'Sign Up'}
         </button>
+        <OAuth />
         {errors.root && <p className='text-red-500'>{errors.root.message}</p>}
         <p className='text-right'>Have an account? <span className='text-blue-500'>
           <Link to='/sign-in'>Login</Link>

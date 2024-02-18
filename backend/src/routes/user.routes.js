@@ -6,6 +6,7 @@ import {
   logoutUser,
 } from "../controllers/user.controller.js";
 import { verifyJwt } from "../middlewares/auth.middleware.js";
+import { loginWithGoogle } from "../controllers/auth.controller.js";
 
 const router = Router();
 
@@ -15,5 +16,6 @@ router.route("/login").post(loginUser);
 
 // secure route
 router.route("/logout").post(verifyJwt, logoutUser);
+router.route("/google").post(loginWithGoogle);
 
 export default router;
