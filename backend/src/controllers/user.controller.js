@@ -49,22 +49,17 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 
   if (alreadyExistingUser) {
-    throw new ApiError(400, "User already exists");
+    throw new ApiError(401, "User already exists");
   }
 
   const profilePicLocalPath = req.file?.path;
-
-  console.log(profilePicLocalPath);
   if (!profilePicLocalPath) {
     throw new ApiError(400, "Please upload a profile picture");
   }
-
   const profilePicCloudinary = await uploadToCloudinary(profilePicLocalPath);
-
   if (!profilePicCloudinary) {
     throw new ApiError(500, "Profile picture upload failed");
   }
-
   const user = await User.create({
     username,
     email,
@@ -78,7 +73,9 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(500, "User not created");
   }
 
-  res.status(201).json(new ApiResponse(201, userCreated));
+  res
+    .status(201)
+    .json(new ApiResponse(201, userCreated, "User created Successfully"));
 });
 
 const loginUser = asyncHandler(async (req, res) => {

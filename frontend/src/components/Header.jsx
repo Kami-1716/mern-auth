@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 const Header = () => {
   return (
     <div className='bg-slate-300 mb-[1px]'>
-      <header className='flex justify-between items-center max-w-6xl mx-auto bg-slate-300 shadow-sm'>
+      <header className='flex justify-between items-center max-w-6xl mx-auto bg-slate-300 shadow-sm px-2'>
         <div>
           <Link to="/">
             <h1 className='text-xl font-bold'>Home</h1>
