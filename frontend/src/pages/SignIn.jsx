@@ -1,10 +1,13 @@
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
+import { signinUser, signoutUser } from '../redux/user/userSlice.js'
 
 const SignIn = () => {
   const [userData, setUserData] = useState(null)
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const { register, handleSubmit,
     setError, formState: {
@@ -22,7 +25,7 @@ const SignIn = () => {
         body: JSON.stringify(data),
       });
       const responseData = await response.json();
-      setUserData(responseData.data);
+      dispatch(signinUser(responseData.data.user));
       navigate('/');
     } catch (error) {
       setError("root", {
