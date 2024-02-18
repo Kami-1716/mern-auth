@@ -23,8 +23,6 @@ const SignUp = () => {
       method: 'POST',
       body: formData,
     });
-
-    console.log(response)
     if (response.ok) {
       const responseData = await response.json();
       setUserData(responseData.data);
