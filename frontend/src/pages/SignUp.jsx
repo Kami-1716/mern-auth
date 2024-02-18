@@ -1,35 +1,34 @@
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const SignUp = () => {
   const [userData, setUserData] = useState({})
-  const [isSuccess, setIsSuccess] = useState(false)
-  const [isError, setIsError] = useState(false)
-  const { register, handleSubmit, formState: {
+  const navigate = useNavigate()
+  const { register, handleSubmit, setError, formState: {
     errors,
     isSubmitting
   } } = useForm()
 
   const onSubmit = async (data) => {
-    setIsError(false);
-    const formData = new FormData();
-    formData.append('profilePic', data.profilePic[0]); // Assuming data.profilePic is an array
-    formData.append('username', data.username);
-    formData.append('email', data.email);
-    formData.append('password', data.password);
+    try {
+      const formData = new FormData();
+      formData.append('profilePic', data.profilePic[0]);
+      formData.append('username', data.username);
+      formData.append('email', data.email);
+      formData.append('password', data.password);
 
-    const response = await fetch('/api/v1/user/register', {
-      method: 'POST',
-      body: formData,
-    });
-    if (response.ok) {
+      const response = await fetch('/api/v1/user/register', {
+        method: 'POST',
+        body: formData,
+      });
       const responseData = await response.json();
       setUserData(responseData.data);
-      setIsSuccess(true);
-    } else {
-      console.error(response?.message);
-      setIsError(true);
+      navigate('/sign-in');
+    } catch (error) {
+      setError("root", {
+        message: "Username or Email Already Taken"
+      })
     }
   }
 
@@ -94,8 +93,7 @@ const SignUp = () => {
         >
           {isSubmitting ? 'Submitting...' : 'Sign Up'}
         </button>
-        {isSuccess && <p className='text-green-500'>User Created Successfully</p>}
-        {isError && <p className='text-red-500'>Something went wrong</p>}
+        {errors.root && <p className='text-red-500'>{errors.root.message}</p>}
         <p className='text-right'>Have an account? <span className='text-blue-500'>
           <Link to='/sign-in'>Login</Link>
         </span></p>

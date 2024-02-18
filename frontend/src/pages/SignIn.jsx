@@ -1,40 +1,35 @@
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const SignIn = () => {
-  const [userData, setUserData] = useState({})
-  const [isSuccess, setIsSuccess] = useState(false)
-  const [isError, setIsError] = useState(false)
+  const [userData, setUserData] = useState(null)
+  const navigate = useNavigate()
 
-  const { register, handleSubmit, formState: {
-    errors,
-    isSubmitting
-  } } = useForm()
+  const { register, handleSubmit,
+    setError, formState: {
+      errors,
+      isSubmitting
+    } } = useForm()
 
   const onSubmit = async (data) => {
-    const response = await fetch('/api/v1/user/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-
-    console.log(response);
-    if (response.ok) {
+    try {
+      const response = await fetch('/api/v1/user/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
       const responseData = await response.json();
       setUserData(responseData.data);
-      setIsSuccess(true);
-    } else {
-      setIsError(true);
+      navigate('/');
+    } catch (error) {
+      setError("root", {
+        message: "Invalid credentials"
+      })
     }
   }
-
-  setTimeout(() => {
-    setIsSuccess(false);
-    setIsError(false);
-  }, 4000);
 
   return (
     <div className='m-4'>
@@ -76,10 +71,9 @@ const SignIn = () => {
         >
           {isSubmitting ? 'Signing In...' : 'Sign In'}
         </button>
-        {isSuccess && <p className='text-green-500'>Logged in Successfully</p>}
-        {isError && <p className='text-red-500'>Something went wrong</p>}
-        <p className='text-right'>Have an account? <span className='text-blue-500'>
-          <Link to='/sign-in'>Login</Link>
+        {errors.root && <p className='text-red-500'>{errors.root.message}</p>}
+        <p className='text-right'>Don&#39;t Have an account? <span className='text-blue-500'>
+          <Link to='/sign-up'>Sign Up</Link>
         </span></p>
       </form>
     </div>

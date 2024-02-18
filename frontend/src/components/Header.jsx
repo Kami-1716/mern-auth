@@ -17,9 +17,9 @@ const Header = () => {
                 About
               </li>
             </Link>
-            <Link to="/sign-up">
+            <Link to="/sign-in">
               <li className='font-semibold'>
-                Sign Up
+                Sign In
               </li>
             </Link>
             <Link to="/profile">
