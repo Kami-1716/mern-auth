@@ -55,7 +55,7 @@ const Profile = () => {
           }}
         />
         <img
-          src={user.currentUser.profilePic}
+          src={formData.profilePic || user.currentUser.profilePic}
           className='rounded-full h-28 w-28 object-cover cursor-pointer'
           onClick={() => filePickerRef.current.click()}
         />
