@@ -10,7 +10,6 @@ const Profile = () => {
   const [progress, setProgress] = useState(0)
   const [imageUploadError, setImageUploadError] = useState(null)
   const [formData, setFormData] = useState({})
-  console.log(formData)
 
   useEffect(() => {
     if (image) {

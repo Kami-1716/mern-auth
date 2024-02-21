@@ -4,6 +4,7 @@ import {
   loginUser,
   registerUser,
   logoutUser,
+  updateUserDetails,
 } from "../controllers/user.controller.js";
 import { verifyJwt } from "../middlewares/auth.middleware.js";
 import { loginWithGoogle } from "../controllers/auth.controller.js";
@@ -17,5 +18,7 @@ router.route("/login").post(loginUser);
 // secure route
 router.route("/logout").post(verifyJwt, logoutUser);
 router.route("/google").post(loginWithGoogle);
+
+router.route("/updatepassword/:id").post(verifyJwt, updateUserDetails);
 
 export default router;

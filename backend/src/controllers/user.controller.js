@@ -134,4 +134,59 @@ const logoutUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, "User logged out successfully"));
 });
 
-export { registerUser, loginUser, logoutUser, createAccessRefreshTokens };
+const updateUserDetails = asyncHandler(async (req, res) => {
+  if (req.user._id !== req.params.id) {
+    throw new ApiError(403, "You are not authorized to perform this action");
+  }
+  const { oldPassword, newPassword, newProfilePic } = req.body;
+
+  if (!oldPassword || !newPassword) {
+    throw new ApiError(400, "Please fill in all fields");
+  }
+
+  if (newPassword.length < 8) {
+    throw new ApiError(400, "Password must be at least 8 characters long");
+  }
+
+  const isOldPasswordCorrect = await user.comparePassword(oldPassword);
+
+  if (!isOldPasswordCorrect) {
+    throw new ApiError(400, "Invalid old password");
+  }
+
+  const updateUserObject = {
+    password: newPassword,
+  };
+
+  if (newProfilePic) {
+    updateUserObject.profilePic = newProfilePic;
+  }
+
+  const user = await User.findByIdAndUpdate(
+    req.params.id,
+    {
+      $set: updateUserObject,
+    },
+    { new: true }
+  );
+
+  const { password, ...rest } = user;
+
+  res.status(200).json(
+    new ApiResponse(
+      200,
+      {
+        rest,
+      },
+      "User updated successfully"
+    )
+  );
+});
+
+export {
+  registerUser,
+  loginUser,
+  logoutUser,
+  createAccessRefreshTokens,
+  updateUserDetails,
+};
