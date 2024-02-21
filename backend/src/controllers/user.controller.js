@@ -135,9 +135,11 @@ const logoutUser = asyncHandler(async (req, res) => {
 });
 
 const updateUserDetails = asyncHandler(async (req, res) => {
-  if (req.user._id !== req.params.id) {
+  const userId = req.user._id; // Use the ObjectId directly
+  if (userId.toString() !== req.params.id) {
     throw new ApiError(403, "You are not authorized to perform this action");
   }
+
   const { oldPassword, newPassword, newProfilePic } = req.body;
 
   if (!oldPassword || !newPassword) {
@@ -148,7 +150,9 @@ const updateUserDetails = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Password must be at least 8 characters long");
   }
 
-  const isOldPasswordCorrect = await user.comparePassword(oldPassword);
+  const currentUser = await User.findById(userId);
+
+  const isOldPasswordCorrect = await currentUser.comparePassword(oldPassword);
 
   if (!isOldPasswordCorrect) {
     throw new ApiError(400, "Invalid old password");
@@ -162,7 +166,7 @@ const updateUserDetails = asyncHandler(async (req, res) => {
     updateUserObject.profilePic = newProfilePic;
   }
 
-  const user = await User.findByIdAndUpdate(
+  const updatedUser = await User.findByIdAndUpdate(
     req.params.id,
     {
       $set: updateUserObject,
@@ -170,7 +174,7 @@ const updateUserDetails = asyncHandler(async (req, res) => {
     { new: true }
   );
 
-  const { password, ...rest } = user;
+  const rest = await User.findById(updatedUser._id).select("-password");
 
   res.status(200).json(
     new ApiResponse(

@@ -19,6 +19,6 @@ router.route("/login").post(loginUser);
 router.route("/logout").post(verifyJwt, logoutUser);
 router.route("/google").post(loginWithGoogle);
 
-router.route("/updatepassword/:id").post(verifyJwt, updateUserDetails);
+router.route("/updateuser/:id").post(verifyJwt, updateUserDetails);
 
 export default router;
